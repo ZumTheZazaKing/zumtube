@@ -3,7 +3,7 @@ import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: secret.FIREBASE_KEY,
+    apiKey: "AIzaSyBR-Ejlj_0UCqpu1V7wL-qafM39J3qu6M0",
     authDomain: "zumtube-42a23.firebaseapp.com",
     projectId: "zumtube-42a23",
     storageBucket: "zumtube-42a23.appspot.com",
