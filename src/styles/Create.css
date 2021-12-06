@@ -1,0 +1,15 @@
+#contained-button-file{
+    display: none;
+}
+
+#videoPreview{
+    border: 1px solid black;
+    background-color: black;
+    width:50%;
+}
+
+#thumbPreview{
+    background-color: black;
+    width: 200px;
+    height: 100px;
+}

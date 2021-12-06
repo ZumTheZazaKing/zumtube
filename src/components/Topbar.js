@@ -3,6 +3,7 @@ import { SignOut } from './SignOut';
 import { useContext, useState } from 'react';
 import { Context } from '../context/Context';
 import { auth } from '../firebase'
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,6 +17,8 @@ import Logo from '../images/logodarkcut.png'
 
 export function Topbar(){
     const { user } = useContext(Context);
+
+    let navigate = useNavigate();
 
     const [profileAnchorEl, setProfileAnchorEl] = useState(null);
     const [guestAnchorEl, setGuestAnchorEl] = useState(null);
@@ -35,7 +38,7 @@ export function Topbar(){
     };
 
     return (<div id="topbar">
-        <img id="logo" src={Logo} alt="logo"/>
+        <img id="logo" src={Logo} alt="logo" onClick={() => navigate("/")}/>
         <div id="ppStuff">
             {user ? <Avatar id="pp" alt="pp" src={auth.currentUser.photoURL} onClick={profileHandleClick}/> 
             : <Avatar id="pp" alt="pp" sx={{ bgcolor: "purple" }} onClick={guestHandleClick}>G</Avatar>}
@@ -49,7 +52,7 @@ export function Topbar(){
                 }}
             >
                 <MenuItem onClick={() => {guestHandleClose(); SignIn()}}>
-                    <ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon>
+                    <ListItemIcon><LoginIcon fontSize="small"/></ListItemIcon>
                     Sign In
                 </MenuItem>
             </Menu>
@@ -68,7 +71,7 @@ export function Topbar(){
                     </ListItemIcon>
                     Your Channel
                 </MenuItem>
-                <MenuItem onClick={profileHandleClose}>
+                <MenuItem onClick={() => {profileHandleClose(); navigate("/create")}}>
                     <ListItemIcon>
                         <AddIcon fontSize="small"/>
                     </ListItemIcon>
