@@ -1,7 +1,8 @@
-import { auth } from "../firebase"
+import { auth } from "../firebase";
+import Button from '@mui/material/Button';
 
 export const SignOut = () => {
     return auth.currentUser && (
-        <button onClick={() => auth.signOut()}>Sign Out</button>
+        <Button variant="outlined" onClick={() => auth.signOut()}>Sign Out</Button>
     )
 }
