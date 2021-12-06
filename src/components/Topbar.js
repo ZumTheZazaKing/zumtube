@@ -6,6 +6,11 @@ import { auth } from '../firebase'
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon  from '@mui/material/ListItemIcon';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AddIcon from '@mui/icons-material/Add';
 import '../styles/Topbar.css';
 import Logo from '../images/logodarkcut.png'
 
@@ -43,7 +48,10 @@ export function Topbar(){
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={() => {guestHandleClose(); SignIn()}}>Sign In</MenuItem>
+                <MenuItem onClick={() => {guestHandleClose(); SignIn()}}>
+                    <ListItemIcon><LogoutIcon fontSize="small"/></ListItemIcon>
+                    Sign In
+                </MenuItem>
             </Menu>
             <Menu
                 id="profile-menu"
@@ -54,9 +62,24 @@ export function Topbar(){
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={profileHandleClose}>Profile</MenuItem>
-                <MenuItem onClick={profileHandleClose}>My account</MenuItem>
-                <MenuItem onClick={() => {profileHandleClose(); SignOut()}}>Sign Out</MenuItem>
+                <MenuItem onClick={profileHandleClose}>
+                    <ListItemIcon>
+                        <AccountBoxIcon fontSize="small"/>
+                    </ListItemIcon>
+                    Your Channel
+                </MenuItem>
+                <MenuItem onClick={profileHandleClose}>
+                    <ListItemIcon>
+                        <AddIcon fontSize="small"/>
+                    </ListItemIcon>
+                    Create Video
+                </MenuItem>
+                <MenuItem onClick={() => {profileHandleClose(); SignOut()}}>
+                    <ListItemIcon>
+                        <LogoutIcon fontSize="small"/>
+                    </ListItemIcon>
+                    Sign Out
+                </MenuItem>
             </Menu>
         </div>
     </div>)
