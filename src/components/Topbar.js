@@ -65,7 +65,7 @@ export function Topbar(){
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={profileHandleClose}>
+                <MenuItem onClick={() => {profileHandleClose(); navigate(`/channel/${auth.currentUser.uid}`)}}>
                     <ListItemIcon>
                         <AccountBoxIcon fontSize="small"/>
                     </ListItemIcon>

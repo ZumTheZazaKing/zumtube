@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Topbar = lazy(() => import('./Topbar').then(module => ({default:module.Topbar})));
 const Home = lazy(() => import('./Home').then(module => ({default:module.Home})));
 const Create = lazy(() => import('./Create').then(module => ({default:module.Create})));
+const Channel = lazy(() => import('./Channel').then(module => ({default:module.Channel})));
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
               
               <Route exact path="/" element={<Home/>}/>
               <Route exact path="/create" element={<Create/>}/>
+              <Route path="/channel/:id" element={<Channel/>}/>
 
             </Routes>
             <ToastContainer

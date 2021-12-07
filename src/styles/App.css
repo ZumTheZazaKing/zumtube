@@ -6,6 +6,10 @@
   font-family: "Nanum Gothic", sans-serif;
 }
 
+h1 {
+  color: white;
+}
+
 body {
   background-color: #181818;
 }

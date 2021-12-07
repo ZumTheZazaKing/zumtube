@@ -1,0 +1,9 @@
+#channel{
+    color: white;
+}
+
+#videos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
