@@ -13,3 +13,22 @@
     width: 200px;
     height: 100px;
 }
+
+
+#videoUploadProgress{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 50%;
+}
+
+#videoUploadProgressBar{
+    height: 10px;
+    width: 90%;
+    border-radius: 10px;
+}
+
+#videoUploadPercentage{
+    width: 10%;
+    text-align: center;
+}
