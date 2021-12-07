@@ -9,4 +9,49 @@
 
 body{
     background-color:#181818;
+    .video{
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        width: 270px;
+        #videoThumbnail{
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #videoDetails{
+            display: flex;
+            #videoAuthorImg{
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+            }
+            #videoTitle{
+                font-size: 14px;
+                font-weight: 600;
+                word-break: keep-all;
+            }
+            #videoAuthor{
+                font-weight: 600;
+                font-size: 12px;
+                color: #aaaaaa;
+            }
+        }
+    }
+    .video:hover{
+        cursor: pointer;
+        background-color: rgba($color: #aaaaaa, $alpha: 0.2);
+    }
+}
+
+@media only screen and (max-width: 400px){
+    .video{
+        width: 100% !important;
+        #videoThumbnail{
+            height: 200px !important;
+        }
+    }
 }

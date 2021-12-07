@@ -88,13 +88,13 @@ export const Create = () => {
         <br/><br/>
         <form id="uploadForm" onSubmit={(e) => onSubmit(e)}>
             <h3>Title</h3>
-            <input className="uploadTextInput" style={{fontWeight:'bold'}} type="text" 
+            <input className="uploadTextInput" maxLength={80} style={{fontWeight:'bold'}} type="text" 
             value={videoData.title} 
             onChange={e => setVideoData({...videoData, title:e.target.value})}/>
             <br/><br/>
 
             <h3>Description</h3>
-            <textarea rows={10} className="uploadTextInput"
+            <textarea style={{lineHeight:1.5}} maxLength={1000} rows={10} className="uploadTextInput"
             value={videoData.description} 
             onChange={e => setVideoData({...videoData, description:e.target.value})}></textarea>
             <br/><br/>

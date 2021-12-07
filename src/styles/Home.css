@@ -1,0 +1,10 @@
+#home{
+    color: white;
+    padding: 10px;
+}
+
+#videos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
