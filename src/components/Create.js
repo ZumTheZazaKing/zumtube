@@ -83,21 +83,24 @@ export const Create = () => {
     }
 
     return (<div id="create">
-        <h1>Create Video</h1>
-        <form onSubmit={(e) => onSubmit(e)}>
+        <br/>
+        <h1 id="createTitle">Create Video</h1>
+        <br/><br/>
+        <form id="uploadForm" onSubmit={(e) => onSubmit(e)}>
             <h3>Title</h3>
-            <input type="text" 
+            <input className="uploadTextInput" style={{fontWeight:'bold'}} type="text" 
             value={videoData.title} 
             onChange={e => setVideoData({...videoData, title:e.target.value})}/>
             <br/><br/>
 
             <h3>Description</h3>
-            <textarea 
+            <textarea rows={10} className="uploadTextInput"
             value={videoData.description} 
             onChange={e => setVideoData({...videoData, description:e.target.value})}></textarea>
             <br/><br/>
 
             <h2>Video Upload</h2>
+            <br/>
             <input type="file" accept="video/*" 
             onChange={e => videoUpload(e)}/>
             
@@ -114,13 +117,15 @@ export const Create = () => {
             <br/><br/>
 
             <h2>Thumbnail Upload</h2>
+            <p>(2:1) Recommended</p>
+            <br/>
             <input type="file" accept="image/*" 
             onChange={(e) => imageUpload(e)}/>
             <br/>
             <img alt="" id="thumbPreview" src={videoData.thumbnail}/>
             <br/><br/>
 
-            <input type="submit"/> 
+            <input id="uploadButton" type="submit" value="Upload"/> 
             <br/><br/>
         </form>
     </div>)
