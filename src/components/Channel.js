@@ -17,8 +17,6 @@ export const Channel = () => {
     })
 
     useEffect(() => {
-        console.log(id);
-
         onSnapshot(doc(db,"users",id), snapshot => {
             const q = query(collection(db, "videos"), orderBy("createdAt","desc"));
             onSnapshot(q, collectionSnapshot => {
@@ -36,9 +34,13 @@ export const Channel = () => {
 
     return (channelInfo.name ? 
         <div id="channel">
-            <img src={channelInfo.avatar} alt="" width="100" height="100"/>
-            <h2>{channelInfo.name}</h2>
-            <textarea value={channelInfo.description} readOnly></textarea>
+            <div id="banner">
+                <img id="channelAvatar" src={channelInfo.avatar} alt=""/>
+                <div id="channelInfo">
+                    <p id="channelName">{channelInfo.name}</p>
+                    <p id="channelDescription">{channelInfo.description}</p>
+                </div>
+            </div>
             <div id="videos">
             <Suspense fallback={<h1>Loading...</h1>}>
                 {channelInfo.videos ? channelInfo.videos && channelInfo.videos.map((video, i) => 

@@ -15,7 +15,7 @@ export const Video = (props) => {
     },[author])
 
     return (<div className="video">
-        <img id="videoThumbnail" alt="" src={thumbnail} width="100" height="100"/>
+        <img id="videoThumbnail" alt="" src={thumbnail || "https://via.placeholder.com/150?text=U"} width="100" height="100"/>
         <div id="videoDetails">
             <img id="videoAuthorImg" src={authorDetails.photo} alt=""/>
             <div id="videoWords">
