@@ -12,6 +12,7 @@ const Topbar = lazy(() => import('./Topbar').then(module => ({default:module.Top
 const Home = lazy(() => import('./Home').then(module => ({default:module.Home})));
 const Create = lazy(() => import('./Create').then(module => ({default:module.Create})));
 const Channel = lazy(() => import('./Channel').then(module => ({default:module.Channel})));
+const Edit = lazy(() => import('./Edit').then(module => ({default:module.Edit})));
 
 function App() {
 
@@ -55,6 +56,7 @@ function App() {
               <Route exact path="/" element={<Home/>}/>
               <Route exact path="/create" element={<Create/>}/>
               <Route path="/channel/:id" element={<Channel/>}/>
+              <Route path="/edit/:id" element={<Edit/>}/>
 
             </Routes>
             <ToastContainer

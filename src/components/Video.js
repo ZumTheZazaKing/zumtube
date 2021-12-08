@@ -17,8 +17,11 @@ export const Video = (props) => {
         })
     },[author])
 
-    return (<div className="video" onContextMenu={user ? (auth.currentUser.uid === author ? props.onContextMenu : () => {return}) : () => {return}}>
-        <LazyLoadImage 
+    return (<div className="video"
+    id={props.info.id}
+    onContextMenu={user ? (auth.currentUser.uid === author ? props.onContextMenu : () => {return}) : () => {return}}>
+        <LazyLoadImage
+            effect="blur" 
             id="videoThumbnail" alt="" 
             src={thumbnail || "https://via.placeholder.com/150?text=U"}
             placeholder={<CircularProgress disableShrink/>}

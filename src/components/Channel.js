@@ -1,5 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -15,6 +15,7 @@ const Video = lazy(() => import('./Video').then(module => ({default:module.Video
 export const Channel = () => {
 
     const { id } = useParams();
+    const navigate = useNavigate();
     const [channelInfo, setChannelInfo] = useState({
         name:"",
         description:"",
@@ -39,9 +40,11 @@ export const Channel = () => {
     },[id])
 
     const [contextMenu, setContextMenu] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
 
     const handleContextMenu = (event) => {
         event.preventDefault();
+        setSelectedId(event.target.parentNode.id)
         setContextMenu(
           contextMenu === null
             ? {
@@ -54,6 +57,11 @@ export const Channel = () => {
     const handleClose = () => {
         setContextMenu(null);
     };
+
+    const handleEdit = () => {
+        handleClose();
+        navigate(`/edit/${selectedId}`)
+    }
 
     return (channelInfo.name ? 
         <div id="channel">
@@ -80,7 +88,7 @@ export const Channel = () => {
                         : undefined
                     }
                 >
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={handleEdit}>
                         <ListItemIcon>
                             <EditIcon fontSize="small"/>
                         </ListItemIcon>
