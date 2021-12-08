@@ -1,8 +1,54 @@
 #watch{
-    border: 1px solid white;
     color: white;
+    padding: 30px 0;
+    line-height: 1.5;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+
+details{cursor: pointer;}
+details[open] summary ~ *{
+    cursor: pointer;
+    transition: .2s ease-in;
+    animation:sweep .5s ease-in-out;
+}
+details summary::before{content:"Show Description"}
+details[open] summary::before{content:"Hide Description"}
 
 #watchDescription textarea{
     resize: none;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    line-height: 1.5;
+    border: none;
+    font-size: 16px;
+}
+
+#watchTitle{
+    font-size: 18px;
+}
+
+#watchDate{
+    font-size: 14px;
+    color: #aaaaaa;
+}
+
+#watch-container{ 
+    width: 75%;
+    padding: 20px;
+}
+
+#watchVideo{
+    width: 100%;
+    height: 100%;
+}
+
+@media only screen and (max-width: 800px){
+    #watch-container{
+        width: 100%;
+    }
 }
