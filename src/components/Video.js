@@ -21,7 +21,6 @@ export const Video = (props) => {
     id={props.info.id}
     onContextMenu={user ? (auth.currentUser.uid === author ? props.onContextMenu : () => {return}) : () => {return}}>
         <LazyLoadImage
-            effect="blur" 
             id="videoThumbnail" alt="" 
             src={thumbnail || "https://via.placeholder.com/150?text=U"}
             placeholder={<CircularProgress disableShrink/>}

@@ -43,6 +43,9 @@ export const Channel = () => {
     const [selectedId, setSelectedId] = useState(null);
 
     const handleContextMenu = (event) => {
+
+        if(!event.target.parentNode.className)return;
+
         event.preventDefault();
         setSelectedId(event.target.parentNode.id)
         setContextMenu(
@@ -61,6 +64,11 @@ export const Channel = () => {
     const handleEdit = () => {
         handleClose();
         navigate(`/edit/${selectedId}`)
+    }
+
+    const handleDelete = () => {
+        handleClose();
+        console.log(selectedId)
     }
 
     return (channelInfo.name ? 
@@ -94,7 +102,7 @@ export const Channel = () => {
                         </ListItemIcon>
                         Edit
                     </MenuItem>
-                    <MenuItem sx={{color:"crimson"}} onClick={handleClose}>
+                    <MenuItem sx={{color:"crimson"}} onClick={handleDelete}>
                         <ListItemIcon>
                             <DeleteIcon sx={{color:"crimson"}} fontSize="small"/>
                         </ListItemIcon>
