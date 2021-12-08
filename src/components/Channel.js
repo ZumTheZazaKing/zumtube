@@ -1,14 +1,21 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query, deleteDoc } from '@firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import '../styles/Channel.css';
+import { toast } from 'react-toastify';
 
 const Video = lazy(() => import('./Video').then(module => ({default:module.Video})));
 
@@ -16,6 +23,8 @@ export const Channel = () => {
 
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [deleteOpen, setDeleteOpen] = useState(false);
     const [channelInfo, setChannelInfo] = useState({
         name:"",
         description:"",
@@ -68,7 +77,19 @@ export const Channel = () => {
 
     const handleDelete = () => {
         handleClose();
-        console.log(selectedId)
+        setDeleteOpen(true);
+    }
+    
+    const handleDeleteClose = () => {
+        setDeleteOpen(false);
+    };
+    const handleDeleteYes = async() => {
+        handleDeleteClose();
+
+        await deleteDoc(doc(db,'videos',selectedId))
+        .then(() => toast.success("Video deleted"))
+        .catch(err => toast.error("Something went wrong"))
+
     }
 
     return (channelInfo.name ? 
@@ -109,6 +130,27 @@ export const Channel = () => {
                         Delete
                     </MenuItem>
                 </Menu>
+                <Dialog
+                    open={deleteOpen}
+                    onClose={handleDeleteClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                    {"Are you sure?"}
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Once the video is deleted, it can't be restored
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleDeleteClose}>No</Button>
+                    <Button variant="contained" onClick={handleDeleteYes} autoFocus>
+                        Yes
+                    </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div> 
     : <div className="loading"><CircularProgress disableShrink/></div>)
