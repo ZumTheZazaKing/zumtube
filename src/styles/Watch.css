@@ -1,0 +1,8 @@
+#watch{
+    border: 1px solid white;
+    color: white;
+}
+
+#watchDescription textarea{
+    resize: none;
+}

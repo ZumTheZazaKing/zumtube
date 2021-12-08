@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { db, auth } from "../firebase";
 import { onSnapshot, doc } from "@firebase/firestore";
 import { Context } from '../context/Context';
@@ -10,6 +11,7 @@ export const Video = (props) => {
     const { title, thumbnail, author } = props.info.data();
     const { user } = useContext(Context);
     const [authorDetails, setAuthorDetails] = useState({name:"",photo:""});
+    const navigate = useNavigate();
 
     useEffect(() => {
         onSnapshot(doc(db,"users",author), snapshot => {
@@ -17,8 +19,13 @@ export const Video = (props) => {
         })
     },[author])
 
+    const watchVideo = () => {
+        navigate(`/watch/${props.info.id}`)
+    }
+
     return (<div className="video"
     id={props.info.id}
+    onClick={watchVideo}
     onContextMenu={user ? (auth.currentUser.uid === author ? props.onContextMenu : () => {return}) : () => {return}}>
         <LazyLoadImage
             id="videoThumbnail" alt="" 
