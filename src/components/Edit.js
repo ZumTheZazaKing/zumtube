@@ -33,10 +33,10 @@ export const Edit = () => {
                 description:snapshot.data().description,
                 video:snapshot.data().video,
                 thumbnail:snapshot.data().thumbnail,
-                author:snapshot.data().author
+                author:snapshot.data().author,
             })
         })
-    },[id])
+    },[id, videoData])
 
     const [uploadProgress, setUploadProgress] = useState(null);
 
@@ -110,7 +110,6 @@ export const Edit = () => {
             <br/><br/>
 
             <h2>Video Upload</h2>
-            <p style={{fontSize:14, color:"grey"}}>(Video will be same if not changed)</p>
             <br/>
             <input type="file" accept="video/*" 
             onChange={e => videoUpload(e)}/>
