@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { db } from '../firebase';
 import { onSnapshot, collection, orderBy, query } from '@firebase/firestore';
+import CircularProgress from '@mui/material/CircularProgress';
 import '../styles/Home.css';
 
 const Video = lazy(() => import('./Video').then(module => ({default:module.Video})));
@@ -22,7 +23,7 @@ export const Home = () => {
         <h2>Recent Uploads</h2>
         <br/>
         <div id="videos">
-            <Suspense fallback={<h1>Loading...</h1>}>
+            <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
                 {videos ? videos && videos.map((video, i) => 
                     <Video info={video} key={i}/>
                 ) : <h2>No videos available</h2>}

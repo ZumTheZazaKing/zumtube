@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../firebase';
 import { collection, doc, onSnapshot, orderBy, query } from '@firebase/firestore';
+import CircularProgress from '@mui/material/CircularProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -64,7 +65,7 @@ export const Channel = () => {
                 </div>
             </div>
             <div id="videos">
-                <Suspense fallback={<h1>Loading...</h1>}>
+                <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
                     {channelInfo.videos ? channelInfo.videos && channelInfo.videos.map((video, i) => 
                         <Video onContextMenu={handleContextMenu} info={video} key={i}/>
                     ) : <h2>No videos available</h2>}
@@ -94,5 +95,5 @@ export const Channel = () => {
                 </Menu>
             </div>
         </div> 
-    : <h1>Loading...</h1>)
+    : <div className="loading"><CircularProgress disableShrink/></div>)
 }

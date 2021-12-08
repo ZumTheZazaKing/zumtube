@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { ToastContainer } from 'react-toastify';
+import CircularProgress from '@mui/material/CircularProgress';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Topbar = lazy(() => import('./Topbar').then(module => ({default:module.Topbar})));
@@ -41,7 +42,10 @@ function App() {
   return (
     <HashRouter>
       <div className="App">
-        <Suspense fallback={<h1>Loading...</h1>}>
+        <Suspense fallback={<div className="loading">
+          <CircularProgress size={60} thickness={4} disableShrink/>
+          </div>}>
+
           <Context.Provider value={{
             user
           }}>
