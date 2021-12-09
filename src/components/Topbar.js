@@ -40,8 +40,8 @@ export function Topbar(){
     return (<div id="topbar">
         <img id="logo" src={Logo} alt="logo" onClick={() => navigate("/")}/>
         <div id="ppStuff">
-            {user ? <Avatar id="pp" alt="pp" src={auth.currentUser.photoURL} onClick={profileHandleClick}/> 
-            : <Avatar id="pp" alt="pp" sx={{ bgcolor: "purple" }} onClick={guestHandleClick}>G</Avatar>}
+            {user ? <Avatar id="pp" alt="Z" src={auth.currentUser.photoURL} onClick={profileHandleClick}/> 
+            : <Avatar id="pp" alt="Z" sx={{ bgcolor: "purple" }} onClick={guestHandleClick}>G</Avatar>}
             <Menu
                 id="guest-menu"
                 anchorEl={guestAnchorEl}

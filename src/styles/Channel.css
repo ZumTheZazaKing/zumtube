@@ -20,6 +20,12 @@
     font-weight: bold;
     font-size: 24px;
     word-break: keep-all;
+    align-items: center;
+    display: flex;
+}
+
+#channelName #editIcon{
+    color: #aaa;
 }
 
 #channelDescription{
@@ -34,6 +40,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+#channel .hide{
+    display: none;
+}
+
+.showPointer{
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 400px){

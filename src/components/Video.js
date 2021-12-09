@@ -4,6 +4,7 @@ import { db, auth } from "../firebase";
 import { onSnapshot, doc } from "@firebase/firestore";
 import { Context } from '../context/Context';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import Avatar from '@mui/material/Avatar'
 import CircularProgress from '@mui/material/CircularProgress';
 
 export const Video = (props) => {
@@ -33,10 +34,10 @@ export const Video = (props) => {
             placeholder={<CircularProgress disableShrink/>}
         />
         <div id="videoDetails">
-            <img id="videoAuthorImg" src={authorDetails.photo} alt=""/>
+            <Avatar id="videoAuthorImg" src={authorDetails.photo} alt="Z"/>
             <div id="videoWords">
                 <p id="videoTitle">{title.length > 42 ? `${title.substr(0,42)}...` : title}</p>
-                <p id="videoAuthor">{authorDetails.name}</p>
+                <p id="videoAuthor">{authorDetails.name.length > 25 ? `${authorDetails.name.substr(0,25)}...` : authorDetails.name}</p>
             </div>
         </div>
     </div>)

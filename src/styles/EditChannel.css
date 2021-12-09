@@ -1,0 +1,53 @@
+#editChannel{
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#editChannelForm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 60%;
+}
+
+
+#editChannelForm input[type=text], input[type=file]{
+    width: 70%;
+}
+
+#editChannelForm input[type=text]{
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+#editChannel #channelPicture{
+    width: 100px;
+    height: 100px;
+}
+
+#editChannelForm input[type=submit]{
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #4644e2;
+    color: white;
+}
+
+#editChannelForm input[type=file],input[type=submit]{
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+    #editChannelForm{
+        width: 95%;
+    }
+}

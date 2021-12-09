@@ -15,6 +15,7 @@ const Channel = lazy(() => import('./Channel').then(module => ({default:module.C
 const Edit = lazy(() => import('./Edit').then(module => ({default:module.Edit})));
 const Watch = lazy(() => import('./Watch').then(module => ({default:module.Watch})));
 const Search = lazy(() => import('./Search').then(module => ({default:module.Search})));
+const EditChannel = lazy(() => import('./EditChannel').then(module => ({default:module.EditChannel})));
 
 function App() {
 
@@ -61,6 +62,7 @@ function App() {
               <Route path="/edit/:id" element={<Edit/>}/>
               <Route path="/watch/:id" element={<Watch/>}/>
               <Route path="/search/:searchQuery" element={<Search/>}/>
+              <Route path="/editchannel/:id" element={<EditChannel/>}/>
 
             </Routes>
             <ToastContainer

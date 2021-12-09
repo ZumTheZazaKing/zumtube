@@ -1,8 +1,10 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useState, useContext, lazy, Suspense } from 'react';
+import { Context } from '../context/Context';
 import { useParams, useNavigate } from 'react-router-dom';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { collection, doc, onSnapshot, orderBy, query, deleteDoc } from '@firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
+import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
@@ -23,6 +25,9 @@ export const Channel = () => {
 
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useContext(Context);
+    const [editHide, setEditHide] = useState("hide");
+    const [showPointer, setShowPointer] = useState("");
 
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [channelInfo, setChannelInfo] = useState({
@@ -92,12 +97,29 @@ export const Channel = () => {
 
     }
 
+    //Hover to edit channel
+    const handleHover = () => {
+        setEditHide("");
+        setShowPointer("showPointer");
+    }
+    const handleOut = () => {
+        setEditHide("hide")
+        setShowPointer("")
+    }
+    const handleClick = () => {
+        navigate(`/editchannel/${id}`);
+    }
+
     return (channelInfo.name ? 
         <div id="channel">
-            <div id="banner">
-                <img id="channelAvatar" src={channelInfo.avatar} alt=""/>
+            <div id="banner" className={showPointer}
+            onMouseOver={user ? (auth.currentUser.uid === id ? handleHover : () => {return}) : () => {return}}
+            onMouseOut={() => handleOut()}
+            onClick={user ? (auth.currentUser.uid === id ? handleClick : () => {return}) : () => {return}}
+            >
+                <Avatar id="channelAvatar" src={channelInfo.avatar} alt="Z"/>
                 <div id="channelInfo">
-                    <p id="channelName">{channelInfo.name}</p>
+                    <p id="channelName">{channelInfo.name}<EditIcon className={editHide} id="editIcon" fontSize="small"/></p>
                     <p id="channelDescription">{channelInfo.description}</p>
                 </div>
             </div>
