@@ -36,7 +36,7 @@ export const Edit = () => {
                 author:snapshot.data().author,
             })
         })
-    },[id, videoData])
+    },[id])
 
     const [uploadProgress, setUploadProgress] = useState(null);
 
