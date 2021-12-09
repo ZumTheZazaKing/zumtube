@@ -24,7 +24,7 @@ export const Search = () => {
     },[searchQuery])
 
     return (<div id="searchPage">
-        <h2>{searchVideos ? (searchVideos.length ? `Results for '${searchQuery}'` : `No results for '${searchQuery}'`) : ""}</h2>
+        <h3>{searchVideos ? (searchVideos.length ? `Results for '${searchQuery}'` : `No results for '${searchQuery}'`) : ""}</h3>
         <br/>
         <div id="videos">
             <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
