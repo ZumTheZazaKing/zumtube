@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db } from '../firebase';
 import { onSnapshot, doc } from "@firebase/firestore";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import '../styles/Watch.css';
 export const Watch = () => {
 
     const { id } = useParams();
+    const navigate = useNavigate();
     const [watchMonth, setWatchMonth] = useState(null)
     const [videoDetails, setVideoDetails] = useState({
         title:"",
@@ -14,7 +15,10 @@ export const Watch = () => {
         video:"",
         day:"",
         month:"",
-        year:""
+        year:"",
+        authorName:"",
+        authorImg:"",
+        authorId:""
     })
 
     useEffect(() => {
@@ -61,24 +65,37 @@ export const Watch = () => {
                 default:
                     setWatchMonth("???")
             }
-            setVideoDetails({
-                title:snapshot.data().title,
-                description:snapshot.data().description,
-                video:snapshot.data().video,
-                day:d.getUTCDate(),
-                year:d.getFullYear(),
-                month:watchMonth
+            onSnapshot(doc(db,"users",snapshot.data().author), authorSnapshot => {
+                setVideoDetails({
+                    title:snapshot.data().title,
+                    description:snapshot.data().description,
+                    video:snapshot.data().video,
+                    day:d.getUTCDate(),
+                    year:d.getFullYear(),
+                    month:watchMonth,
+                    authorName:authorSnapshot.data().name,
+                    authorImg:authorSnapshot.data().avatar,
+                    authorId:snapshot.data().author
+                })
             })
-            
         })
 
     },[id, watchMonth])
+
+    const goToChannel = () => {
+        navigate(`/channel/${videoDetails.authorId}`)
+    }
 
     return (<div id="watch">
         <div id="watch-container">
             <video id="watchVideo" src={videoDetails.video} width="300" height="200" autoPlay controls/>
             <p id="watchTitle">{videoDetails.title}</p>
             <p id="watchDate">{`${videoDetails.month} ${videoDetails.day}, ${videoDetails.year}`}</p>
+            <br/>
+            <div id="watchAuthor" onClick={goToChannel}>
+                <img src={videoDetails.authorImg} alt=""/>
+                <p>{videoDetails.authorName}</p>
+            </div>
             <br/>
             <details id="watchDescription">
                 <summary></summary>

@@ -48,6 +48,24 @@ details[open] summary::before{content:"Hide Description"}
     height: 100%;
 }
 
+#watchAuthor{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#watchAuthor img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+#watchAuthor p{
+    word-break: break-all;
+    font-weight: bold;
+}
+
 @media only screen and (max-width: 800px){
     #watch-container{
         width: 100%;
