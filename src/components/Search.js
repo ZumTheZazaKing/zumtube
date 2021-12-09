@@ -25,6 +25,7 @@ export const Search = () => {
 
     return (<div id="searchPage">
         <h2>{searchVideos ? (searchVideos.length ? `Results for '${searchQuery}'` : `No results for '${searchQuery}'`) : ""}</h2>
+        <br/>
         <div id="videos">
             <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
                 {searchVideos ? searchVideos && searchVideos.map((video, i) => 
