@@ -46,7 +46,7 @@ body .video #videoDetails #videoAuthorImg {
 body .video #videoDetails #videoTitle {
   font-size: 14px;
   font-weight: 600;
-  word-break: keep-all;
+  word-break: break-all;
 }
 body .video #videoDetails #videoAuthor {
   font-weight: 600;
