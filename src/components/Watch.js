@@ -3,11 +3,6 @@ import { db, auth } from '../firebase';
 import { Context } from "../context/Context";
 import { onSnapshot, doc, updateDoc } from "@firebase/firestore";
 import { useEffect, useState, useContext } from "react";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
-import { toast } from 'react-toastify';
 import '../styles/Watch.css';
 
 export const Watch = () => {
@@ -26,9 +21,7 @@ export const Watch = () => {
         authorName:"",
         authorImg:"",
         authorId:"",
-        views:0,
-        likes:0,
-        dislikes:0
+        views:0
     })
 
     useEffect(() => {
@@ -88,9 +81,7 @@ export const Watch = () => {
                     authorName:authorSnapshot.data().name,
                     authorImg:authorSnapshot.data().avatar,
                     authorId:snapshot.data().author,
-                    views:snapshot.data().viewers.length,
-                    likes:snapshot.data().likers.length,
-                    dislikes:snapshot.data().dislikers.length
+                    views:snapshot.data().viewers.length
                 })
             })
         })
@@ -114,38 +105,6 @@ export const Watch = () => {
         navigate(`/channel/${videoDetails.authorId}`)
     }
 
-    const handleLike = () => {
-        if(!user)return toast.warning("You must be signed in");
-        onSnapshot(doc(db,"videos",id), snapshot => {
-            if(!snapshot.data().likers.includes(auth.currentUser.uid)){
-                updateDoc(doc(db,"videos",id),{
-                    likers:[...snapshot.data().likers, auth.currentUser.uid],
-                })
-                //if(snapshot.data().dislikers.includes(auth.currentUser.uid)){
-                //    updateDoc(doc(db,"videos",id),{
-                //        dislikers:[...snapshot.data().dislikers.filter(disliker => disliker !== auth.currentUser.uid)],
-                //    })
-                //}
-            }
-        })
-    }
-
-    const handleDislike = () => {
-        if(!user)return toast.warning("You must be signed in");
-        onSnapshot(doc(db,"videos",id), snapshot => {
-            if(!snapshot.data().dislikers.includes(auth.currentUser.uid)){
-                updateDoc(doc(db,"videos",id),{
-                    dislikers:[...snapshot.data().dislikers, auth.currentUser.uid],
-                })
-                //if(snapshot.data().likers.includes(auth.currentUser.uid)){
-                //    updateDoc(doc(db,"videos",id),{
-                //        likers:[...snapshot.data().likers.filter(liker => liker !== auth.currentUser.uid)],
-                //    })
-                //}
-            }
-        })
-    }
-
     return (<div id="watch">
         <div id="watch-container">
             <video id="watchVideo" src={videoDetails.video} width="300" height="200" autoPlay controls/>
@@ -154,17 +113,6 @@ export const Watch = () => {
                 {videoDetails.views} views | &nbsp;
                 {`${videoDetails.month} ${videoDetails.day}, ${videoDetails.year}`}
             </p>
-            <br/>
-            <div id="watchPoll">
-                <div id="like" onClick={handleLike}>
-                    <ThumbUpOutlinedIcon/>
-                    {videoDetails.likes}
-                </div>
-                <div id="dislike" onClick={() => handleDislike()}>
-                    <ThumbDownOutlinedIcon/>
-                    {videoDetails.dislikes}
-                </div>
-            </div>
             <br/>
             <div id="watchAuthor" onClick={goToChannel}>
                 <img src={videoDetails.authorImg} alt=""/>

@@ -39,20 +39,6 @@ details[open] summary::before{content:"Hide Description"}
     word-break: break-all;
 }
 
-#watchPoll{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-#watchPoll div{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    cursor: pointer;
-}
-
 #watch-container{ 
     width: 75%;
     padding: 20px;
