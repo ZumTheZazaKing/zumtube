@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 export const Video = (props) => {
 
-    const { title, thumbnail, author } = props.info.data();
+    const { title, thumbnail, author, viewers } = props.info.data();
     const { user } = useContext(Context);
     const [authorDetails, setAuthorDetails] = useState({name:"",photo:""});
     const navigate = useNavigate();
@@ -37,7 +37,11 @@ export const Video = (props) => {
             <Avatar id="videoAuthorImg" src={authorDetails.photo} alt="Z"/>
             <div id="videoWords">
                 <p id="videoTitle">{title.length > 42 ? `${title.substr(0,42)}...` : title}</p>
-                <p id="videoAuthor">{authorDetails.name.length > 25 ? `${authorDetails.name.substr(0,25)}...` : authorDetails.name}</p>
+                <p id="videoAuthor">
+                    {authorDetails.name.length > 25 ? `${authorDetails.name.substr(0,25)}...` : authorDetails.name}
+                    <br/>
+                    {viewers.length} views
+                </p>
             </div>
         </div>
     </div>)

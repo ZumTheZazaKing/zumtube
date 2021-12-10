@@ -1,12 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { db } from '../firebase';
-import { onSnapshot, doc } from "@firebase/firestore";
-import { useEffect, useState } from "react";
+import { db, auth } from '../firebase';
+import { Context } from "../context/Context";
+import { onSnapshot, doc, updateDoc } from "@firebase/firestore";
+import { useEffect, useState, useContext } from "react";
 import '../styles/Watch.css';
 
 export const Watch = () => {
 
     const { id } = useParams();
+    const { user } = useContext(Context);
     const navigate = useNavigate();
     const [watchMonth, setWatchMonth] = useState(null)
     const [videoDetails, setVideoDetails] = useState({
@@ -18,10 +20,13 @@ export const Watch = () => {
         year:"",
         authorName:"",
         authorImg:"",
-        authorId:""
+        authorId:"",
+        views:0
     })
 
     useEffect(() => {
+
+        viewCheck();
         
         onSnapshot(doc(db,"videos",id), snapshot => {
             const d = new Date(snapshot.data().createdAt.seconds*1000);
@@ -75,12 +80,26 @@ export const Watch = () => {
                     month:watchMonth,
                     authorName:authorSnapshot.data().name,
                     authorImg:authorSnapshot.data().avatar,
-                    authorId:snapshot.data().author
+                    authorId:snapshot.data().author,
+                    views:snapshot.data().viewers.length
                 })
             })
         })
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[id, watchMonth])
+
+    const viewCheck = () => {
+        if(user){
+            onSnapshot(doc(db,"videos",id), snapshot => {
+                if(!snapshot.data().viewers.includes(auth.currentUser.uid)){
+                    updateDoc(doc(db,"videos",id),{
+                        viewers:[...snapshot.data().viewers, auth.currentUser.uid]
+                    })
+                }
+            })
+        }
+    }
 
     const goToChannel = () => {
         navigate(`/channel/${videoDetails.authorId}`)
@@ -90,7 +109,10 @@ export const Watch = () => {
         <div id="watch-container">
             <video id="watchVideo" src={videoDetails.video} width="300" height="200" autoPlay controls/>
             <p id="watchTitle">{videoDetails.title}</p>
-            <p id="watchDate">{`${videoDetails.month} ${videoDetails.day}, ${videoDetails.year}`}</p>
+            <p id="watchDate">
+                {videoDetails.views} views | &nbsp;
+                {`${videoDetails.month} ${videoDetails.day}, ${videoDetails.year}`}
+            </p>
             <br/>
             <div id="watchAuthor" onClick={goToChannel}>
                 <img src={videoDetails.authorImg} alt=""/>

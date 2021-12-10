@@ -41,7 +41,10 @@ export const Create = () => {
             thumbnail:videoData.thumbnail,
             author:auth.currentUser.uid,
             createdAt:serverTimestamp(),
-            date:currentDate
+            date:currentDate,
+            viewers:[],
+            likers:[],
+            dislikers:[]
         })
         .then(() => toast.success("Video created"))
         .catch(() => toast.error("Something went wrong"))
