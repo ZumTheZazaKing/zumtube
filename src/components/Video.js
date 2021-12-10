@@ -4,15 +4,17 @@ import { db, auth } from "../firebase";
 import { onSnapshot, doc } from "@firebase/firestore";
 import { Context } from '../context/Context';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import moment from 'moment';
 import Avatar from '@mui/material/Avatar'
 import CircularProgress from '@mui/material/CircularProgress';
 
 export const Video = (props) => {
 
-    const { title, thumbnail, author, viewers } = props.info.data();
+    const { title, thumbnail, author, viewers, createdAt } = props.info.data();
     const { user } = useContext(Context);
     const [authorDetails, setAuthorDetails] = useState({name:"",photo:""});
     const navigate = useNavigate();
+    const videoUTCString = new Date(createdAt.seconds*1000).toUTCString();
 
     useEffect(() => {
         onSnapshot(doc(db,"users",author), snapshot => {
@@ -40,7 +42,7 @@ export const Video = (props) => {
                 <p id="videoAuthor">
                     {authorDetails.name.length > 25 ? `${authorDetails.name.substr(0,25)}...` : authorDetails.name}
                     <br/>
-                    {viewers.length} views
+                    {viewers.length} views&#8226;{moment.utc(videoUTCString).fromNow()}
                 </p>
             </div>
         </div>

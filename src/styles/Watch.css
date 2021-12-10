@@ -67,6 +67,51 @@ details[open] summary::before{content:"Hide Description"}
     font-weight: bold;
 }
 
+#watchComments #commentsTitle{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#commentField{
+    width: 100%;
+    resize: none;
+    background-color: #272727;
+    color: white;
+    line-height: 1.5;
+    border: none;
+    outline: none;
+    padding: 10px;
+}
+#commentField::-webkit-scrollbar{
+    width: 13px;
+    height: 13px;
+}
+#commentField::-webkit-scrollbar-thumb{
+    background: #CCCCCC;
+    border-radius: 0px;
+}
+#commentField::-webkit-scrollbar-thumb:hover{
+    background: #DBDBDB;
+}
+#commentField::-webkit-scrollbar-track{
+    background: #272727;
+    border-radius: 0px;
+    box-shadow: inset 0px 0px 0px 0px #F0F0F0;
+}
+
+#watchComments input[type="submit"]{
+    float: right;
+    padding: 10px 15px;
+    border: none;
+    outline: none;
+    color: white;
+    background-color: rgb(54, 123, 212);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
 @media only screen and (max-width: 800px){
     #watch-container{
         width: 100%;

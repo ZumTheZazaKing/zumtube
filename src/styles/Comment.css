@@ -1,0 +1,25 @@
+.comment{
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+#commentBody{
+    margin-left: 10px;
+}
+
+#commentName{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#commentName span{
+    font-size: 12px;
+    font-weight: 500;
+    color: #aaa;
+}
+
+#commentMain{
+    font-size: 14px;
+    line-height: 1.5;
+}

@@ -33,7 +33,6 @@ export const Create = () => {
         if(!videoData.video)return toast.warning("Please upload a video");
         if(!videoData.thumbnail)return toast.warning("Please upload a thumbnail")
 
-        const currentDate = new Date().toLocaleDateString();
         await addDoc(collection(db,'videos'),{
             title:videoData.title,
             description:videoData.description,
@@ -41,10 +40,10 @@ export const Create = () => {
             thumbnail:videoData.thumbnail,
             author:auth.currentUser.uid,
             createdAt:serverTimestamp(),
-            date:currentDate,
             viewers:[],
             likers:[],
-            dislikers:[]
+            dislikers:[],
+            comments:[]
         })
         .then(() => toast.success("Video created"))
         .catch(() => toast.error("Something went wrong"))
