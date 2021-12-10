@@ -115,7 +115,6 @@ export const Watch = () => {
 
         if(event.target.className !== "comment")return;
         setSelectedCommentId(event.target.id);
-        console.log(event.target.id)
 
         event.preventDefault();
         setContextMenu(
@@ -141,8 +140,6 @@ export const Watch = () => {
     };
     const handleDeleteYes = async() => {
         handleDeleteClose();
-
-        console.log(videoDetails.comments)
 
         const [victimObject] = videoDetails.comments.filter(commentDoc => 
             commentDoc.commentId === selectedCommentId)
