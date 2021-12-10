@@ -1,12 +1,17 @@
 import Avatar from '@mui/material/Avatar';
 import '../styles/Comment.css'
 import moment from 'moment';
+import { auth } from '../firebase';
+import { useContext } from 'react';
+import { Context } from '../context/Context';
 
 export const Comment = (props) => {
 
-    const { avatar, createdAt, comment, name } = props.info;
+    const { avatar, createdAt, comment, name, id, commentId } = props.info;
+    const { user } = useContext(Context);
 
-    return (<div className="comment">
+    return (<div className="comment" id={commentId}
+    onContextMenu={user ? (auth.currentUser.uid === id ? props.onContextMenu : () => {return}) : () => {return}}>
         <Avatar src={avatar} alt={name}/>
         <div id="commentBody">
             <p id="commentName">

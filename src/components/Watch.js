@@ -1,10 +1,21 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { db, auth } from '../firebase';
 import { Context } from "../context/Context";
-import { onSnapshot, doc, updateDoc } from "@firebase/firestore";
+import { onSnapshot, doc, updateDoc, arrayRemove } from "@firebase/firestore";
 import { useEffect, useState, useContext, lazy, Suspense } from "react";
 import { toast } from 'react-toastify';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress';
+import uniqid from 'uniqid';
 import '../styles/Watch.css';
 
 const Comment = lazy(() => import('./Comment').then(module =>({default:module.Comment})));
@@ -15,7 +26,11 @@ export const Watch = () => {
     const { user } = useContext(Context);
     const navigate = useNavigate();
     const [watchMonth, setWatchMonth] = useState(null)
+    const [contextMenu, setContextMenu] = useState(null);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [selectedCommentId, setSelectedCommentId] = useState("");
     const [comment, setComment] = useState("");
+    
     const [videoDetails, setVideoDetails] = useState({
         title:"",
         description:"",
@@ -27,7 +42,7 @@ export const Watch = () => {
         authorImg:"",
         authorId:"",
         views:0,
-        comments:""
+        comments:[]
     })
 
     useEffect(() => {
@@ -96,6 +111,50 @@ export const Watch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[id, watchMonth])
 
+    const handleContextMenu = (event) => {
+
+        if(event.target.className !== "comment")return;
+        setSelectedCommentId(event.target.id);
+        console.log(event.target.id)
+
+        event.preventDefault();
+        setContextMenu(
+          contextMenu === null
+            ? {
+                mouseX: event.clientX - 2,
+                mouseY: event.clientY - 4,
+            }
+            : null,
+        );
+    };
+    const handleClose = () => {
+        setContextMenu(null);
+    };
+
+    const handleDelete = () => {
+        handleClose();
+        setDeleteOpen(true);
+    }
+    
+    const handleDeleteClose = () => {
+        setDeleteOpen(false);
+    };
+    const handleDeleteYes = async() => {
+        handleDeleteClose();
+
+        console.log(videoDetails.comments)
+
+        const [victimObject] = videoDetails.comments.filter(commentDoc => 
+            commentDoc.commentId === selectedCommentId)
+
+        await updateDoc(doc(db,'videos',id),{
+            comments:arrayRemove(victimObject)
+        })
+        .then(() => toast.success("Comment deleted"))
+        .catch(err => toast.error("Something went wrong"))
+
+    }
+
     const viewCheck = () => {
         if(user){
             onSnapshot(doc(db,"videos",id), snapshot => {
@@ -126,7 +185,8 @@ export const Watch = () => {
                     comment:comment,
                     avatar:snapshot.data().avatar,
                     createdAt:currentTime,
-                    id:snapshot.id
+                    id:snapshot.id,
+                    commentId:uniqid()
                 }]
             }).then(() => setComment(""));
         })
@@ -155,13 +215,15 @@ export const Watch = () => {
             <br/>
             <div id="watchComments">
                 <p id="commentsTitle">Comments</p>
+                <br/>
                 <form onSubmit={e => createComment(e)}>
                     <textarea 
                     rows={5} 
                     id="commentField" 
                     value={comment} 
                     onChange={e => setComment(e.target.value)}
-                    placeholder="'Enter' will not work properly"></textarea>
+                    placeholder="'Enter' will not work properly"
+                    maxLength={1500}></textarea>
                     <br/>
                     <input type="submit" value="Comment"/>
                 </form>
@@ -169,9 +231,47 @@ export const Watch = () => {
                 <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
                     {videoDetails.comments.length > 0 ?
                     videoDetails.comments && videoDetails.comments.map((commentDoc,i) => 
-                        <Comment info={commentDoc} key={i}/>
+                        <Comment onContextMenu={handleContextMenu} info={commentDoc} key={i}/>
                     ): <h3>No comments</h3>}
                 </Suspense>
+                <Menu
+                    open={contextMenu !== null}
+                    onClose={handleClose}
+                    anchorReference="anchorPosition"
+                    anchorPosition={
+                    contextMenu !== null
+                        ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                        : undefined
+                    }
+                >
+                    <MenuItem sx={{color:"crimson"}} onClick={handleDelete}>
+                        <ListItemIcon sx={{color:"crimson"}}>
+                            <DeleteIcon fontSize="small"/>
+                        </ListItemIcon>
+                        Delete
+                    </MenuItem>
+                </Menu>
+                <Dialog
+                    open={deleteOpen}
+                    onClose={handleDeleteClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                    {"Are you sure?"}
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        The comment will be deleted
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleDeleteClose}>No</Button>
+                    <Button variant="contained" onClick={handleDeleteYes} autoFocus>
+                        Yes
+                    </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div>
     </div>)
