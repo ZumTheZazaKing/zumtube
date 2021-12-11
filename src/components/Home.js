@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { db } from '../firebase';
-import { onSnapshot, collection, orderBy, query } from '@firebase/firestore';
+import { onSnapshot, collection, orderBy, query, limit, startAfter } from '@firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
@@ -14,10 +14,11 @@ export const Home = () => {
     const [videos, setVideos] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+    const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
-        const q = query(collection(db,"videos"), orderBy("createdAt","desc"));
-        onSnapshot(q, collectionSnapshot => {
+        const firstBatch = query(collection(db,"videos"), orderBy("createdAt","desc"), limit(10));
+        onSnapshot(firstBatch, collectionSnapshot => {
             if(collectionSnapshot.size > 0){
                 setVideos([...collectionSnapshot.docs])
             }
@@ -27,6 +28,17 @@ export const Home = () => {
     const goToSearch = (e) => {
         e.preventDefault();
         navigate(`/search/${searchQuery}`);
+    }
+
+    const handleViewMore = () => {
+        const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(videos[videos.length-1].data().createdAt),limit(10));
+        onSnapshot(nextBatch, collectionSnapshot => {
+            if(collectionSnapshot.size > 0){
+                setVideos([...videos, ...collectionSnapshot.docs]);
+            } else {
+                setShowMore(false);
+            }
+        })
     }
 
     return (<div id="home">
@@ -45,5 +57,12 @@ export const Home = () => {
                 ) : <h2>No videos available</h2>}
             </Suspense>
         </div>
+        <br/>
+        {videos ? <div id="viewMore">
+            {showMore ? 
+            <Button onClick={handleViewMore} className="button">View More</Button>
+            : <h4>That's all for now</h4>}
+        </div> : ""}
+        
     </div>)
 }

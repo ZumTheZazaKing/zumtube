@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, lazy, Suspense } from 'react';
 import { Context } from '../context/Context';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase';
-import { collection, doc, onSnapshot, orderBy, query, deleteDoc } from '@firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query, deleteDoc, limit, startAfter } from '@firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -28,6 +28,7 @@ export const Channel = () => {
     const { user } = useContext(Context);
     const [editHide, setEditHide] = useState("hide");
     const [showPointer, setShowPointer] = useState("");
+    const [showMore, setShowMore] = useState(true);
 
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [channelInfo, setChannelInfo] = useState({
@@ -39,8 +40,8 @@ export const Channel = () => {
 
     useEffect(() => {
         onSnapshot(doc(db,"users",id), snapshot => {
-            const q = query(collection(db, "videos"), orderBy("createdAt","desc"));
-            onSnapshot(q, collectionSnapshot => {
+            const firstBatch = query(collection(db, "videos"), orderBy("createdAt","desc"), limit(10));
+            onSnapshot(firstBatch, collectionSnapshot => {
                 setChannelInfo({
                     name:snapshot.data().name,
                     description:snapshot.data().description,
@@ -52,6 +53,19 @@ export const Channel = () => {
         })
 
     },[id])
+
+    const handleViewMore = () => {
+        const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(channelInfo.videos[channelInfo.videos.length-1].data().createdAt),limit(10));
+        onSnapshot(nextBatch, collectionSnapshot => {
+            if(collectionSnapshot.size > 0){
+                setChannelInfo({...channelInfo, videos:[
+                    ...channelInfo.videos, ...collectionSnapshot.docs.filter(d => d.data().author === id)
+                ]});
+            } else {
+                setShowMore(false);
+            }
+        })
+    }
 
     const [contextMenu, setContextMenu] = useState(null);
     const [selectedId, setSelectedId] = useState(null);
@@ -174,6 +188,12 @@ export const Channel = () => {
                     </DialogActions>
                 </Dialog>
             </div>
+            <br/>
+            {channelInfo.videos ? <div id="viewMore">
+                {showMore ? 
+                <Button onClick={handleViewMore} className="button">View More</Button>
+                : <h4>That's all for now</h4>}
+            </div> : ""}
         </div> 
     : <div className="loading"><CircularProgress disableShrink/></div>)
 }

@@ -50,6 +50,10 @@
     cursor: pointer;
 }
 
+#viewMore{
+    text-align: center;
+}
+
 @media only screen and (max-width: 400px){
     #channelAvatar{
         width: 60px;

@@ -14,7 +14,6 @@ export const Video = (props) => {
     const { user } = useContext(Context);
     const [authorDetails, setAuthorDetails] = useState({name:"",photo:""});
     const navigate = useNavigate();
-    const videoUTCString = new Date(createdAt.seconds*1000).toUTCString();
 
     useEffect(() => {
         onSnapshot(doc(db,"users",author), snapshot => {
@@ -42,7 +41,7 @@ export const Video = (props) => {
                 <p id="videoAuthor">
                     {authorDetails.name.length > 25 ? `${authorDetails.name.substr(0,25)}...` : authorDetails.name}
                     <br/>
-                    {viewers.length} views&#8226;{moment.utc(videoUTCString).fromNow()}
+                    {viewers.length} views&#8226;{moment.utc(new Date(createdAt.seconds*1000).toUTCString()).fromNow()}
                 </p>
             </div>
         </div>
