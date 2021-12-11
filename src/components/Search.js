@@ -4,6 +4,7 @@ import { collection, orderBy, query, limit, startAfter, getDocs } from '@firebas
 import { useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import '../styles/Search.css';
 
 const Video = lazy(() => import('./Video').then(module => ({default:module.Video})));
@@ -11,11 +12,13 @@ const Video = lazy(() => import('./Video').then(module => ({default:module.Video
 export const Search = () => {
 
     const [searchVideos, setSearchVideos] = useState(null);
+    const [searchChannels, setSearchChannels] = useState(null);
     const { searchQuery } = useParams();
     const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
         getSearchVideos();
+        getSearchChannels();
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -26,6 +29,15 @@ export const Search = () => {
         .then(snapshot => {
             setSearchVideos(snapshot.docs.filter(doc => 
                 doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
+            )
+        })
+    }
+    const getSearchChannels = async () => {
+        const firstBatch = query(collection(db,'users'), orderBy("name","asc"),limit(6));
+        await getDocs(firstBatch)
+        .then(snapshot => {
+            setSearchChannels(snapshot.docs.filter(doc => 
+                doc.data().name.toLowerCase().includes(searchQuery.toLowerCase()))
             )
         })
     }
@@ -45,8 +57,18 @@ export const Search = () => {
     }
 
     return (<div id="searchPage">
-        <h3>{searchVideos ? (searchVideos.length ? `Results for '${searchQuery}'` : `No results for '${searchQuery}'`) : ""}</h3>
+        <h3>{searchVideos ? (searchVideos.length ? `Results for '${searchQuery}'` : (searchChannels ? (searchChannels.length ? `Results for '${searchQuery}'` : `No results for '${searchQuery}'`) : "")) : ""}</h3>
         <br/>
+        <div id="channels">
+            <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
+                {searchChannels ? searchChannels && searchChannels.map((channel, i) => 
+                    <div className="channel" key={i}>
+                        <Avatar id="channelAvatar" src={channel.data().avatar} alt={channel.data().name}/>
+                        <p>{channel.data().name}</p>
+                    </div>
+                ) : ""}
+            </Suspense>
+        </div>
         <div id="videos">
             <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
                 {searchVideos ? searchVideos && searchVideos.map((video, i) => 

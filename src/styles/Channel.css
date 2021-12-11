@@ -19,7 +19,7 @@
 #channelName{
     font-weight: bold;
     font-size: 24px;
-    word-break: keep-all;
+    word-break: break-all;
     align-items: center;
     display: flex;
 }

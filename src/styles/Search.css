@@ -13,6 +13,35 @@
     justify-content: center;
 }
 
+#searchPage .channel{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 10px 20px 10px;
+}
+
+#searchPage .channel p{
+    font-size: 24px;
+    font-weight: bold;
+    word-break: break-all;
+    margin-left: 15px;
+}
+
+#searchPage .channel #channelAvatar{
+    width: 100px;
+    height: 100px;
+}
+
 #viewMore{
     text-align: center;
+}
+
+@media only screen and (max-width: 400px){
+    #searchPage .channel #channelAvatar{
+        width: 60px;
+        height: 60px;
+    }
+    #searchPage .channel p{
+        font-size: 20px;
+    }
 }
