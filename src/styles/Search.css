@@ -7,6 +7,12 @@
     word-break: break-all;
 }
 
+#searchPage #videos{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 #viewMore{
     text-align: center;
 }

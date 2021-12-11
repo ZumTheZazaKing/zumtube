@@ -21,29 +21,25 @@ export const Search = () => {
     },[])
 
     const getSearchVideos = async () => {
-        const firstBatch = query(collection(db,'videos'), orderBy("createdAt","desc"),limit(10));
+        const firstBatch = query(collection(db,'videos'), orderBy("viewers","desc"),limit(10));
         await getDocs(firstBatch)
         .then(snapshot => {
-            if(snapshot.size > 0){
-                setSearchVideos(snapshot.docs.filter(doc => 
-                    doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
-                )
-            }
+            setSearchVideos(snapshot.docs.filter(doc => 
+                doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
+            )
         })
     }
 
     const handleViewMore = async () => {
-        const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(searchVideos[searchVideos.length-1].data().createdAt),limit(10));
+        const nextBatch = query(collection(db,"videos"), orderBy("viewers","desc"),startAfter(searchVideos[searchVideos.length-1].data().createdAt),limit(10));
+        
         await getDocs(nextBatch)
         .then(snapshot => {
-            if(snapshot.size > 0){
-                setSearchVideos([...searchVideos, ...snapshot.docs.filter(doc => 
-                    doc.data().title.toLowerCase().includes(searchQuery.toLowerCase())
-                )]);
-                if(snapshot.docs.filter(doc => 
-                    doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))){
-                        setShowMore(false)
-                }
+            setSearchVideos([...searchVideos, ...snapshot.docs.filter(doc => 
+                doc.data().title.toLowerCase().includes(searchQuery.toLowerCase())
+            )]);
+            if(snapshot.docs.filter(doc => doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))){
+                setShowMore(false)
             }
         })
     }
