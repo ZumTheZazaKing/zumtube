@@ -11,21 +11,44 @@ const Video = lazy(() => import('./Video').then(module => ({default:module.Video
 
 export const Home = () => {
 
-    const [videos, setVideos] = useState(null);
+    const [recents, setRecents] = useState(null);
+    const [recommended, setRecommended] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
-    const [showMore, setShowMore] = useState(true);
+    const [showMoreRecents, setShowMoreRecents] = useState(true);
+    const [showMoreRecommeded, setShowMoreRecommended] = useState(true);
 
     useEffect(() => {
-        getVideos();
+        getRecents();
+        getRecommended();
     },[])
 
-    const getVideos = async () => {
-        const firstBatch = query(collection(db,"videos"), orderBy("createdAt","desc"), limit(10));
+    const getRecents = async () => {
+        const firstBatch = query(collection(db,"videos"), orderBy("createdAt","desc"), limit(6));
         await getDocs(firstBatch)
         .then(snapshot => {
             if(snapshot.size > 0){
-                setVideos([...snapshot.docs])
+                setRecents([...snapshot.docs])
+            }
+        })
+    }
+    const getRecommended = async () => {
+        const firstBatch = query(collection(db,"videos"), orderBy("viewers","desc"), limit(6));
+        await getDocs(firstBatch)
+        .then(snapshot => {
+            if(snapshot.size > 0){
+                setRecommended([...snapshot.docs])
+            }
+        })
+    }
+    const handleViewMoreRecommended = async() => {
+        const nextBatch = query(collection(db,"videos"), orderBy("viewers","desc"),startAfter(recommended[recommended.length-1].data().viewers),limit(6));
+        await getDocs(nextBatch)
+        .then(snapshot => {
+            if(snapshot.size > 0){
+                setRecommended([...recommended, ...snapshot.docs])
+            } else {
+                setShowMoreRecommended(false);
             }
         })
     }
@@ -35,14 +58,14 @@ export const Home = () => {
         navigate(`/search/${searchQuery}`);
     }
 
-    const handleViewMore = async() => {
-        const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(videos[videos.length-1].data().createdAt),limit(10));
+    const handleViewMoreRecents = async() => {
+        const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(recents[recents.length-1].data().createdAt),limit(6));
         await getDocs(nextBatch)
         .then(snapshot => {
             if(snapshot.size > 0){
-                setVideos([...videos, ...snapshot.docs])
+                setRecents([...recents, ...snapshot.docs])
             } else {
-                setShowMore(false);
+                setShowMoreRecents(false);
             }
         })
     }
@@ -54,19 +77,36 @@ export const Home = () => {
             <Button id="searchButton" variant="contained"><SearchIcon fontSize="small"/></Button>
         </form>
         <br/>
-        <h2>Recent Uploads</h2>
+        <h2>Recommended</h2>
         <br/>
         <div id="videos">
             <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
-                {videos ? videos && videos.map((video, i) => 
+                {recommended ? recommended && recommended.map((video, i) => 
                     <Video info={video} key={i}/>
                 ) : <h2>No videos available</h2>}
             </Suspense>
         </div>
         <br/>
-        {videos ? <div id="viewMore">
-            {showMore ? 
-            <Button onClick={handleViewMore} className="button">View More</Button>
+        {recents ? <div id="viewMore">
+            {showMoreRecommeded ? 
+            <Button onClick={() => handleViewMoreRecommended()} className="button">View More</Button>
+            : <h4>That's all for now</h4>}
+        </div> : ""}
+
+        <br/>
+        <h2>Recent Uploads</h2>
+        <br/>
+        <div id="videos">
+            <Suspense fallback={<div><CircularProgress disableShrink/></div>}>
+                {recents ? recents && recents.map((video, i) => 
+                    <Video info={video} key={i}/>
+                ) : <h2>No videos available</h2>}
+            </Suspense>
+        </div>
+        <br/>
+        {recents ? <div id="viewMore">
+            {showMoreRecents ? 
+            <Button onClick={() => handleViewMoreRecents()} className="button">View More</Button>
             : <h4>That's all for now</h4>}
         </div> : ""}
         
