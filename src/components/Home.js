@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { db } from '../firebase';
-import { onSnapshot, collection, orderBy, query, limit, startAfter } from '@firebase/firestore';
+import { collection, orderBy, query, limit, startAfter, getDocs } from '@firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
@@ -17,24 +17,30 @@ export const Home = () => {
     const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
+        getVideos();
+    },[])
+
+    const getVideos = async () => {
         const firstBatch = query(collection(db,"videos"), orderBy("createdAt","desc"), limit(10));
-        onSnapshot(firstBatch, collectionSnapshot => {
-            if(collectionSnapshot.size > 0){
-                setVideos([...collectionSnapshot.docs])
+        await getDocs(firstBatch)
+        .then(snapshot => {
+            if(snapshot.size > 0){
+                setVideos([...snapshot.docs])
             }
         })
-    },[])
+    }
 
     const goToSearch = (e) => {
         e.preventDefault();
         navigate(`/search/${searchQuery}`);
     }
 
-    const handleViewMore = () => {
+    const handleViewMore = async() => {
         const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(videos[videos.length-1].data().createdAt),limit(10));
-        onSnapshot(nextBatch, collectionSnapshot => {
-            if(collectionSnapshot.size > 0){
-                setVideos([...videos, ...collectionSnapshot.docs]);
+        await getDocs(nextBatch)
+        .then(snapshot => {
+            if(snapshot.size > 0){
+                setVideos([...videos, ...snapshot.docs])
             } else {
                 setShowMore(false);
             }

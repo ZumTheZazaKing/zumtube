@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { db } from '../firebase';
-import { onSnapshot, collection, orderBy, query, limit, startAfter } from '@firebase/firestore';
+import { collection, orderBy, query, limit, startAfter, getDocs } from '@firebase/firestore';
 import { useParams } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
@@ -15,24 +15,32 @@ export const Search = () => {
     const [showMore, setShowMore] = useState(true);
 
     useEffect(() => {
+        getSearchVideos();
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
+    const getSearchVideos = async () => {
         const firstBatch = query(collection(db,'videos'), orderBy("createdAt","desc"),limit(10));
-        onSnapshot(firstBatch, snapshot => {
+        await getDocs(firstBatch)
+        .then(snapshot => {
             if(snapshot.size > 0){
                 setSearchVideos(snapshot.docs.filter(doc => 
                     doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))
                 )
             }
         })
-    },[searchQuery])
+    }
 
-    const handleViewMore = () => {
+    const handleViewMore = async () => {
         const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(searchVideos[searchVideos.length-1].data().createdAt),limit(10));
-        onSnapshot(nextBatch, collectionSnapshot => {
-            if(collectionSnapshot.size > 0){
-                setSearchVideos([...searchVideos, ...collectionSnapshot.docs.filter(doc => 
+        await getDocs(nextBatch)
+        .then(snapshot => {
+            if(snapshot.size > 0){
+                setSearchVideos([...searchVideos, ...snapshot.docs.filter(doc => 
                     doc.data().title.toLowerCase().includes(searchQuery.toLowerCase())
                 )]);
-                if(collectionSnapshot.docs.filter(doc => 
+                if(snapshot.docs.filter(doc => 
                     doc.data().title.toLowerCase().includes(searchQuery.toLowerCase()))){
                         setShowMore(false)
                 }
