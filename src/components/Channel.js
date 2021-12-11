@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, lazy, Suspense } from 'react';
 import { Context } from '../context/Context';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db, auth } from '../firebase';
-import { collection, doc, onSnapshot, orderBy, query, deleteDoc, limit, startAfter, getDocs } from '@firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query, deleteDoc, limit, startAfter } from '@firebase/firestore';
 import CircularProgress from '@mui/material/CircularProgress';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -40,32 +40,26 @@ export const Channel = () => {
 
     useEffect(() => {
         onSnapshot(doc(db,"users",id), snapshot => {
-            getChannelInfo(snapshot);
-        })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
-
-    const getChannelInfo = async (snapshot) => {
-
-        const firstBatch = query(collection(db, "videos"), orderBy("createdAt","desc"), limit(10));
-        await getDocs(firstBatch)
-        .then(collectionSnapshot => {
-            setChannelInfo({
-                name:snapshot.data().name,
-                description:snapshot.data().description,
-                videos:[...collectionSnapshot.docs.filter(d => d.data().author === id)],
-                avatar:snapshot.data().avatar
+            const firstBatch = query(collection(db, "videos"), orderBy("createdAt","desc"), limit(10));
+            onSnapshot(firstBatch, collectionSnapshot => {
+                setChannelInfo({
+                    name:snapshot.data().name,
+                    description:snapshot.data().description,
+                    videos:[...collectionSnapshot.docs.filter(d => d.data().author === id)],
+                    avatar:snapshot.data().avatar
+                })
             })
-        })
-    }
 
-    const handleViewMore = async () => {
+        })
+
+    },[id])
+
+    const handleViewMore = () => {
         const nextBatch = query(collection(db,"videos"), orderBy("createdAt","desc"),startAfter(channelInfo.videos[channelInfo.videos.length-1].data().createdAt),limit(10));
-        await getDocs(nextBatch)
-        .then(snapshot => {
-            if(snapshot.size > 0){
+        onSnapshot(nextBatch, collectionSnapshot => {
+            if(collectionSnapshot.size > 0){
                 setChannelInfo({...channelInfo, videos:[
-                    ...channelInfo.videos, ...snapshot.docs.filter(d => d.data().author === id)
+                    ...channelInfo.videos, ...collectionSnapshot.docs.filter(d => d.data().author === id)
                 ]});
             } else {
                 setShowMore(false);
