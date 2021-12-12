@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
+import { toast } from 'react-toastify';
 import '../styles/Home.css';
 
 const Video = lazy(() => import('./Video').then(module => ({default:module.Video})));
@@ -55,6 +56,7 @@ export const Home = () => {
 
     const goToSearch = (e) => {
         e.preventDefault();
+        if(!searchQuery)return toast.warning("Search something!");
         navigate(`/search/${searchQuery}`);
     }
 
@@ -74,7 +76,7 @@ export const Home = () => {
         <br/>
         <form id="search" onSubmit={e => goToSearch(e)}>
             <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}/>
-            <Button id="searchButton" variant="contained"><SearchIcon fontSize="small"/></Button>
+            <Button id="searchButton" onClick={(e) => goToSearch(e)} variant="contained"><SearchIcon fontSize="small"/></Button>
         </form>
         <br/>
         <h2>Recommended</h2>

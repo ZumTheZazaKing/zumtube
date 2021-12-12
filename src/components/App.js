@@ -6,6 +6,8 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { ToastContainer } from 'react-toastify';
 import CircularProgress from '@mui/material/CircularProgress';
+import BackToTop from 'react-back-to-top-button';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Topbar = lazy(() => import('./Topbar').then(module => ({default:module.Topbar})));
@@ -77,6 +79,13 @@ function App() {
               pauseOnHover
               theme="dark"
             />
+            <BackToTop
+              showOnScrollUp
+              showAt={100}
+              speed={1500}
+            >
+              <KeyboardArrowUpIcon id="backToTop"/>
+            </BackToTop>
           </Context.Provider>
         </Suspense>
       </div>

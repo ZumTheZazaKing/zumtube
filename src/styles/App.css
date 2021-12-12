@@ -18,6 +18,33 @@ h1 {
   color: white;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #212121;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ababab;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c7c7c7;
+  border-radius: 0px;
+}
+
+#backToTop {
+  border-radius: 50%;
+  color: white;
+  background-color: #3d3d3d;
+  font-size: 50px;
+  cursor: pointer;
+}
+
 body {
   background-color: #181818;
 }
