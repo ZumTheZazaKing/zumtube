@@ -171,6 +171,7 @@ export const Watch = () => {
     const createComment = e => {
         e.preventDefault();
 
+        if(!user)return toast.error("You must be logged in to comment");
         if(!comment)return toast.warning("Comment something!");
 
         const currentTime = new Date().toUTCString();
