@@ -219,7 +219,7 @@ export const Watch = () => {
                     id="commentField" 
                     value={comment} 
                     onChange={e => setComment(e.target.value)}
-                    placeholder="'Enter' will not work properly"
+                    placeholder="Enter commnet here"
                     maxLength={1500}></textarea>
                     <br/>
                     <input type="submit" value="Comment"/>
